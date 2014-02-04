@@ -7,5 +7,9 @@
     <string name="title_section3">Section 3</string>
     <string name="action_settings">Settings</string>
     <string name="button_start">Start</string>
+    <string name="log_supported">Device Supported:</string>
+    <string name="device_not_supported">No</string>
+    <string name="device_supported">Yes</string>
+    <string name="frequency_range">Frequency Range:</string>
 
 </resources>

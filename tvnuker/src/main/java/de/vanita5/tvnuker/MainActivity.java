@@ -3,6 +3,7 @@ package de.vanita5.tvnuker;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.hardware.ConsumerIrManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+
+import de.vanita5.tvnuker.ir.IRCommander;
 
 public class MainActivity extends Activity implements ActionBar.OnNavigationListener {
 
@@ -95,6 +100,9 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+
+        Button bStart;
+
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -120,6 +128,32 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            bStart = (Button) rootView.findViewById(R.id.button_start);
+            bStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO
+                }
+            });
+
+            IRCommander commander = new IRCommander(rootView.getContext());
+            if(commander.init()) {
+                ConsumerIrManager.CarrierFrequencyRange[] frequencyRange = commander.getFrequencyRange();
+
+                TextView textSupported = (TextView) rootView.findViewById(R.id.device_supported);
+                textSupported.setText(getString(R.string.device_supported));
+
+                TextView textFrequencyRange = (TextView) rootView.findViewById(R.id.freqrange);
+                textFrequencyRange.setText("");
+                for(ConsumerIrManager.CarrierFrequencyRange range : frequencyRange) {
+                    textFrequencyRange.append(range.getMinFrequency() + "Hz - " + range.getMaxFrequency() + "Hz\n");
+                }
+            } else {
+                TextView textSupported = (TextView) rootView.findViewById(R.id.device_supported);
+                textSupported.setText(getString(R.string.device_not_supported));
+            }
+
+
             return rootView;
         }
     }
